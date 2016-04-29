@@ -1,0 +1,19 @@
+{
+  "name": "create-versions-aws-lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "createVersions.js",
+  "dependencies": {
+    "async": "^2.0.0-rc.3",
+    "aws-sdk": "^2.3.7",
+    "gm": "^1.22.0",
+    "path": "^0.12.7",
+    "util": "^0.10.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "s@settlin.in",
+  "license": "ISC"
+}
