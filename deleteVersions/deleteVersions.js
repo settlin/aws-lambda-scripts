@@ -13,14 +13,14 @@ var s3 = new AWS.S3();
 exports.handler = function(event, context, callback) {
 	// Read options from the event.
 	console.log("Reading options from event:\n", util.inspect(event, {depth: 5}));
-	var srcBucket = event.Records[0].s3.bucket.name;
+	var srcBucket = event.Records[0].s3.bucket.name; // eg. images-uploads
 	// Object key may have spaces or unicode non-ASCII characters.
 	var srcKey = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, " "));
-	var dstBucket = "settlin";
+	var dstBucket = srcBucket.replace("-uploads", ""); // eg. images
 
 	// Sanity check: validate that source and destination are different buckets.
 	if (srcBucket == dstBucket) {
-		callback("Source and destination buckets are the same.");
+		callback("Source and destination buckets are the same. Src: " + srcBucket + " & Dest: " + dstBucket);
 		return;
 	}
 
