@@ -4,9 +4,22 @@ var AWS = require('aws-sdk');
 var gm = require('gm').subClass({ imageMagick: true }); // Enable ImageMagick integration.
 var util = require('util');
 var path = require('path');
+var fs = require('fs');
 
 // constants
-var VERSIONS = process.env.VERSIONS ? JSON.parse(process.env.VERSIONS) : [{width: 1080, height: 1080, dstSuffix: '-1080'}, {width: 200, height: 200, dstSuffix: '-200'}, {width: 100, height: 100, dstSuffix: '-100'}];
+var VERSIONS = process.env.VERSIONS ? JSON.parse(process.env.VERSIONS) : [
+	// {width: 1080, height: 1080, dstSuffix: '-normal-1080'},
+	// {width: 1080, height: 1080, dstSuffix: '-watermarked-1080', watermark: {
+	// 	logo: {
+	// 		path: 'logo/pure.png', // in the srcBucket
+	// 		width: 150,
+	// 		height: 90
+	// 	},
+	// 	text: 'Settlin',
+	// }},
+	// {width: 200, height: 200, dstSuffix: '-thumbnail-200'},
+	// {width: 100, height: 100, dstSuffix: '-thumbnail-100'}
+];
 
 // get reference to S3 client
 var s3 = new AWS.S3({
@@ -65,17 +78,71 @@ exports.handler = function(event, context, callback) {
 					}
 
 					// Infer the scaling factor to avoid stretching the image unnaturally.
-					var scalingFactor = Math.min(versions[ind].width / size.width, versions[ind].height / size.height);
-					var width	= scalingFactor * size.width;
-					var height = scalingFactor * size.height;
+					const scalingFactor = Math.min(versions[ind].width / size.width, versions[ind].height / size.height);
+					const width	= scalingFactor * size.width;
+					const height = scalingFactor * size.height;
 
-					self.resize(width, height).toBuffer(imageType, function(err, buffer) {
-						if (err) next(err);
-						else {
-							buffers.push(buffer);
-							createVersion(versions, ind + 1, buffers);
+					// Waterfall resize and watermarks as per the version definitions
+					const watermark = versions[ind].watermark || {};
+					async.waterfall([
+						function resize(last) {
+							self.resize(width, height).toBuffer(imageType, function(err, buffer) {
+								if (err) last(err);
+								else last(null, buffer);
+							});
+						},
+						function watermarkLogo(buffer, last) {
+							const imgToDraw = watermark.logo;
+							if (imgToDraw) {
+								s3.getObject({
+									Bucket: srcBucket,
+									Key: imgToDraw.path
+								}, function(err, res) {
+									if (err) last(err);
+									else {
+										fs.writeFile('/tmp/logo.png', res.Body, function(err){
+											if (err) last(err);
+											else {
+												let imageTxt= 'image Over ';
+												imageTxt += parseInt(width - imgToDraw.width - 50, 10) + ","
+												imageTxt += parseInt(height - imgToDraw.height - 50, 10) + " ";
+												imageTxt += imgToDraw.width + "," + imgToDraw.height;
+												imageTxt += " '/tmp/logo.png'";
+												gm(buffer)
+												.draw([imageTxt])
+												.toBuffer(imageType, function(err, buffer) {
+													if (err) last(err);
+													else last(null, buffer);
+												});
+											}
+										});
+									}									
+								});
+							}
+							else last(null, buffer);
+						},
+						function watermarkText(buffer, last) {
+							if (watermark.text) {
+								gm(buffer)
+								.fill('rgba(0,0,0,0.05)')
+								.fontSize(200)
+								.gravity("Center")
+								.draw(["rotate -45 text 0,0 '" + watermark.text + "'"]).toBuffer(imageType, function(err, buffer) {
+									if (err) last(err);
+									else last(null, buffer);
+								});
+							}
+							else last(null, buffer);
 						}
-					});
+					], function(err, buffer) {
+							// any error means failed upload - do not create any version
+							if (err) next(err);
+							else {
+								buffers.push(buffer);
+								createVersion(versions, ind + 1, buffers);
+							}
+						}
+					);
 				}
 
 				// Transform the image buffer in memory.
@@ -114,6 +181,5 @@ exports.handler = function(event, context, callback) {
 		}
 
 		callback(null, 'message');
-	}
-);
+	});
 };

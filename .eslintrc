@@ -1,0 +1,177 @@
+{
+	"parser": "babel-eslint",
+	"env": {
+		"browser": true,
+		"node": true,
+		"jquery": true,
+	},
+	"ecmaFeatures": {
+		"arrowFunctions": true,
+		"blockBindings": true,
+		"classes": true,
+		"defaultParams": true,
+		"destructuring": true,
+		"forOf": true,
+		"generators": false,
+		"modules": true,
+		"objectLiteralComputedProperties": true,
+		"objectLiteralDuplicateProperties": false,
+		"objectLiteralShorthandMethods": true,
+		"objectLiteralShorthandProperties": true,
+		"spread": true,
+		"superInFunctions": true,
+		"templateStrings": true,
+		"jsx": true
+	},
+	"rules": {
+		// babel inserts "use strict"; for us
+		// http://eslint.org/docs/rules/strict
+		"strict": [2, "never"],
+
+		////////// Possible Errors //////////
+
+		"no-comma-dangle": 0,				 // disallow trailing commas in object literals
+		"no-cond-assign": 1,					// disallow assignment in conditional expressions
+		"no-console": 1,							// disallow use of console (off by default in the node environment)
+		"no-constant-condition": 1,	 // disallow use of constant expressions in conditions
+		"no-control-regex": 1,				// disallow control characters in regular expressions
+		"no-debugger": 1,						 // disallow use of debugger
+		"no-dupe-keys": 1,						// disallow duplicate keys when creating object literals
+		"no-duplicate-case": 1,					// http://eslint.org/docs/rules/no-duplicate-case
+		"block-scoped-var": 0,					 // http://eslint.org/docs/rules/block-scoped-var
+		"no-empty": 1,								// disallow empty statements
+		"no-empty-class": 0,					// disallow the use of empty character classes in regular expressions
+		"no-ex-assign": 1,						// disallow assigning to the exception in a catch block
+		"no-extra-boolean-cast": 0,	 // disallow double-negation boolean casts in a boolean context
+		"no-extra-semi": 1,					 // disallow unnecessary semicolons
+		"no-func-assign": 1,					// disallow overwriting functions written as function declarations
+		"no-inner-declarations": 1,	 // disallow function or variable declarations in nested blocks
+		"no-invalid-regexp": 2,			 // disallow invalid regular expression strings in the RegExp constructor
+		"no-irregular-whitespace": 1, // disallow irregular whitespace outside of strings and comments
+		"no-negated-in-lhs": 0,			 // disallow negation of the left operand of an in expression
+		"no-obj-calls": 1,						// disallow the use of object properties of the global object (Math and JSON) as functions
+		"no-regex-spaces": 0,				 // disallow multiple spaces in a regular expression literal
+		"no-reserved-keys": 0,				// disallow reserved words being used as object literal keys (off by default)
+		"no-sparse-arrays": 1,				// disallow sparse arrays
+		"no-unreachable": 1,					// disallow unreachable statements after a return, throw, continue, or break statement
+		"use-isnan": 1,							 // disallow comparisons with the value NaN
+		"valid-jsdoc": 1,						 // Ensure JSDoc comments are valid (off by default)
+		"valid-typeof": 1,						// Ensure that the results of typeof are compared against a valid string
+		"no-var": 0,									// http://eslint.org/docs/rules/no-var
+
+		////////// Variables //////////
+
+		"no-catch-shadow": 0,						 // disallow the catch clause parameter name being the same as a variable in the outer scope (off by default in the node environment)
+		"no-delete-var": 0,							 // disallow deletion of variables
+		"no-label-var": 0,								// disallow labels that share a name with a variable
+		"no-shadow": 1,									 // disallow declaration of variables already declared in the outer scope
+		"no-shadow-restricted-names": 1,	// disallow shadowing of names such as arguments
+		"no-undef": 0,										// disallow use of undeclared variables unless mentioned in a /*global */ block
+		"no-undef-init": 1,							 // disallow use of undefined when initializing variables
+		"no-undefined": 1,								// disallow use of undefined variable (off by default)
+		"no-use-before-define": [1, "nofunc"],				// disallow use of variables before they are defined
+		"no-unused-vars": [1, {					// // disallow declaration of variables that are not used in the code
+			"vars": "local",
+			"args": "after-used",
+      "varsIgnorePattern": "React|AppContainer|Blaze"
+		}],
+
+/**
+ * Best practices
+ */
+		"consistent-return": 1,					// http://eslint.org/docs/rules/consistent-return
+		"curly": [1, "multi-line"],			// http://eslint.org/docs/rules/curly
+		"default-case": 0,							 // http://eslint.org/docs/rules/default-case
+		"dot-notation": [1, {						// http://eslint.org/docs/rules/dot-notation
+			"allowKeywords": true
+		}],
+		"eqeqeq": 1,										 // http://eslint.org/docs/rules/eqeqeq
+		"guard-for-in": 1,							 // http://eslint.org/docs/rules/guard-for-in
+		"no-caller": 1,									// http://eslint.org/docs/rules/no-caller
+		"no-else-return": 1,						 // http://eslint.org/docs/rules/no-else-return
+		"no-eq-null": 1,								 // http://eslint.org/docs/rules/no-eq-null
+		"no-eval": 1,										// http://eslint.org/docs/rules/no-eval
+		"no-extend-native": [1, {"exceptions": ["Array", "String", "Date"]}],					 // http://eslint.org/docs/rules/no-extend-native
+		"no-extra-bind": 1,							// http://eslint.org/docs/rules/no-extra-bind
+		"no-fallthrough": 1,						 // http://eslint.org/docs/rules/no-fallthrough
+		"no-floating-decimal": 1,				// http://eslint.org/docs/rules/no-floating-decimal
+		"no-implied-eval": 1,						// http://eslint.org/docs/rules/no-implied-eval
+		"no-lone-blocks": 1,						 // http://eslint.org/docs/rules/no-lone-blocks
+		"no-loop-func": 1,							 // http://eslint.org/docs/rules/no-loop-func
+		"no-multi-str": 1,							 // http://eslint.org/docs/rules/no-multi-str
+		"no-native-reassign": 1,				 // http://eslint.org/docs/rules/no-native-reassign
+		"no-new": 1,										 // http://eslint.org/docs/rules/no-new
+		"no-new-func": 1,								// http://eslint.org/docs/rules/no-new-func
+		"no-new-wrappers": 1,						// http://eslint.org/docs/rules/no-new-wrappers
+		"no-octal": 1,									 // http://eslint.org/docs/rules/no-octal
+		"no-octal-escape": 1,						// http://eslint.org/docs/rules/no-octal-escape
+		"no-param-reassign": 0,					// http://eslint.org/docs/rules/no-param-reassign
+		"no-proto": 1,									 // http://eslint.org/docs/rules/no-proto
+		"no-redeclare": 1,							 // http://eslint.org/docs/rules/no-redeclare
+		"no-return-assign": 1,					 // http://eslint.org/docs/rules/no-return-assign
+		"no-script-url": 1,							// http://eslint.org/docs/rules/no-script-url
+		"no-self-compare": 1,						// http://eslint.org/docs/rules/no-self-compare
+		"no-sequences": 1,							 // http://eslint.org/docs/rules/no-sequences
+		"no-throw-literal": 1,					 // http://eslint.org/docs/rules/no-throw-literal
+		"no-with": 1,										// http://eslint.org/docs/rules/no-with
+		"radix": 1,											// http://eslint.org/docs/rules/radix
+		"vars-on-top": 0,								// http://eslint.org/docs/rules/vars-on-top
+		"wrap-iife": [1, "any"],				 // http://eslint.org/docs/rules/wrap-iife
+		"yoda": 1,											 // http://eslint.org/docs/rules/yoda
+		"max-len": 0,					 // http://eslint.org/docs/rules/max-len
+
+/**
+ * Style
+ */
+		"indent": [1, "tab", {"SwitchCase": 1}],								// http://eslint.org/docs/rules/indent
+		"brace-style": [1,							 // http://eslint.org/docs/rules/brace-style
+			"stroustrup", {
+			"allowSingleLine": true
+		}],
+		"quotes": [
+			1, "single", "avoid-escape"		// http://eslint.org/docs/rules/quotes
+		],
+		"camelcase": [1, {							 // http://eslint.org/docs/rules/camelcase
+			"properties": "never"
+		}],
+		"comma-spacing": [1, {					 // http://eslint.org/docs/rules/comma-spacing
+			"before": false,
+			"after": true
+		}],
+		"comma-style": [1, "last"],			// http://eslint.org/docs/rules/comma-style
+		"eol-last": 1,									 // http://eslint.org/docs/rules/eol-last
+		"func-names": 0,								 // http://eslint.org/docs/rules/func-names
+		"func-style": 0, // http://eslint.org/docs/rules/func-style
+		"key-spacing": [1, {						 // http://eslint.org/docs/rules/key-spacing
+				"beforeColon": false,
+				"afterColon": true
+		}],
+		"new-cap": [1, {								 // http://eslint.org/docs/rules/new-cap
+			"newIsCap": true,
+			"capIsNewExceptions": ["Class", "SafeString", "Given", "When", "Then", "Match", "Optional", "Maybe", "OneOf"]
+		}],
+		"no-multiple-empty-lines": [1, { // http://eslint.org/docs/rules/no-multiple-empty-lines
+			"max": 2
+		}],
+		"no-nested-ternary": 0,					// http://eslint.org/docs/rules/no-nested-ternary
+		"no-new-object": 1,							// http://eslint.org/docs/rules/no-new-object
+		"no-array-constructor": 1,			 // http://eslint.org/docs/rules/no-array-constructor
+		"no-spaced-func": 1,						 // http://eslint.org/docs/rules/no-spaced-func
+		"no-trailing-spaces": 1,				 // http://eslint.org/docs/rules/no-trailing-spaces
+		"no-wrap-func": 0,							 // http://eslint.org/docs/rules/no-wrap-func
+		"no-underscore-dangle": 0,			 // http://eslint.org/docs/rules/no-underscore-dangle
+		"one-var": 0,				 // http://eslint.org/docs/rules/one-var
+		"padded-blocks": [1, "never"],	 // http://eslint.org/docs/rules/padded-blocks
+		"semi": [1, "always"],					 // http://eslint.org/docs/rules/semi
+		"semi-spacing": [1, {						// http://eslint.org/docs/rules/semi-spacing
+			"before": false,
+			"after": true
+		}],
+		"keyword-spacing": 1,			 // http://eslint.org/docs/rules/keyword-spacing
+		"space-before-blocks": 1,				// http://eslint.org/docs/rules/space-before-blocks
+		"space-before-function-paren": [1, "never"], // http://eslint.org/docs/rules/space-before-function-paren
+		"space-infix-ops": 1,						// http://eslint.org/docs/rules/space-infix-ops
+		"spaced-line-comment": 0,				// http://eslint.org/docs/rules/spaced-line-comment
+    "react/jsx-uses-vars": 2,
+	}
+}

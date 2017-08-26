@@ -1,0 +1,31 @@
+{
+  "name": "aws-lambda-scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "null",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/settlin/aws-lambda-scripts.git"
+  },
+  "keywords": [
+    "aws",
+    "lambda",
+    "resize",
+    "image",
+    "image",
+    "versions",
+    "watermark"
+  ],
+  "author": "Sudhanshu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/settlin/aws-lambda-scripts/issues"
+  },
+  "homepage": "https://github.com/settlin/aws-lambda-scripts#readme",
+  "devDependencies": {
+    "babel-eslint": "^7.2.3"
+  }
+}
