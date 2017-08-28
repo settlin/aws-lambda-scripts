@@ -37,6 +37,12 @@ exports.handler = function(event, context, callback) {
 	var srcBucket = event.Records[0].s3.bucket.name; // eg. images-store
 	// Object key may have spaces or unicode non-ASCII characters.
 	var srcKey = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
+
+	if (!!~srcKey.indexOf('/files/')) {
+		callback('Not working on anything put in a folder "files".');
+		return;
+	}
+	
 	var dstBucket = srcBucket.replace('-store', ''); // eg. images
 
 	// Sanity check: validate that source and destination are different buckets.
@@ -51,8 +57,8 @@ exports.handler = function(event, context, callback) {
 		callback('Could not determine the image type.');
 		return;
 	}
-	var imageType = '.jpg';
-	if (!~['jpg', 'jpeg', 'png'].indexOf(imageType)) {
+	var imageType = 'jpg';
+	if (!~['jpg', 'jpeg', 'png'].indexOf(typeMatch[1].toLowerCase())) {
 		callback(`Unsupported image type: ${imageType}`);
 		return;
 	}
@@ -93,6 +99,7 @@ exports.handler = function(event, context, callback) {
 						},
 						function watermarkLogo(buffer, last) {
 							const imgToDraw = watermark.logo;
+							// if floorplan, do not put logo
 							if (imgToDraw && !~srcKey.indexOf('/floorplans/')) {
 								s3.getObject({
 									Bucket: srcBucket,
