@@ -51,7 +51,7 @@ exports.handler = function(event, context, callback) {
 		callback('Could not determine the image type.');
 		return;
 	}
-	var imageType = typeMatch[1].toLowerCase();
+	var imageType = '.jpg';
 	if (!~['jpg', 'jpeg', 'png'].indexOf(imageType)) {
 		callback(`Unsupported image type: ${imageType}`);
 		return;
@@ -93,7 +93,7 @@ exports.handler = function(event, context, callback) {
 						},
 						function watermarkLogo(buffer, last) {
 							const imgToDraw = watermark.logo;
-							if (imgToDraw) {
+							if (imgToDraw && !~srcKey.indexOf('/floorplans/')) {
 								s3.getObject({
 									Bucket: srcBucket,
 									Key: imgToDraw.path
@@ -158,7 +158,7 @@ exports.handler = function(event, context, callback) {
 
 				s3.putObject({
 					Bucket: dstBucket,
-					Key: path.dirname(srcKey) + versions[ind].dstSuffix + '/' + path.basename(srcKey),
+					Key: srcKey.substr(0, srcKey.lastIndexOf('.')) + versions[ind].dstSuffix + '.' + imageType,
 					Body: buffers[ind],
 					ContentType: contentType
 				}, cb);
