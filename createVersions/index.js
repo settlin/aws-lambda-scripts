@@ -38,7 +38,7 @@ exports.handler = function(event, context, callback) {
 	// Object key may have spaces or unicode non-ASCII characters.
 	var srcKey = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
 
-	if (!!~srcKey.indexOf('/files/')) {
+	if (!!~srcKey.indexOf('/files/') || !!~srcKey.indexOf('/collages/')) {
 		callback('Not working on anything put in a folder "files".');
 		return;
 	}
@@ -179,11 +179,6 @@ exports.handler = function(event, context, callback) {
 				'Unable to resize ' + srcBucket + '/' + srcKey +
 				' and upload to ' + dstBucket + '/' + srcKey +
 				' due to an error: ' + err
-			);
-		} else {
-			console.log(
-				'Successfully resized ' + srcBucket + '/' + srcKey +
-				' and uploaded to ' + dstBucket + '/' + srcKey
 			);
 		}
 
