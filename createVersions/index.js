@@ -95,10 +95,13 @@ exports.handler = function(event, context, callback) {
 							const imgToDraw = watermark.logo;
 							if (imgToDraw) {
 								s3.getObject({
-									Bucket: srcBucket,
+									Bucket: dstBucket, // or wherever you keep the logo
 									Key: imgToDraw.path
 								}, function(err, res) {
-									if (err) last(err);
+									if (err) {
+										console.error('Failed to fetch logo');
+										last(err);
+									}
 									else {
 										fs.writeFile('/tmp/logo.png', res.Body, function(err){
 											if (err) last(err);
