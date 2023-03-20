@@ -7,7 +7,9 @@
 		"mongodb": "^5.1.0"
 	},
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"upload": "zip -r bundle.zip .; aws lambda update-function-code --function-name settlin-db-backup --zip-file fileb://bundle.zip",
+		"run": "aws lambda invoke --function-name settlin-db-backup  --invocation-type Event --cli-binary-format raw-in-base64-out --payload '{\"seconds\": 86400}' response.json.zip"
 	},
 	"author": "s@settlin.in",
 	"license": "ISC"
