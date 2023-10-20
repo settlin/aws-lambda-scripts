@@ -27,10 +27,12 @@ const collections = [
 	{name: 'invoices'},
 	{name: 'jurisdictions', complete: true},
 	{name: 'listings'},
+	{name: 'listingDestinations', complete: true},
 	{name: 'locationMaps', complete: true},
 	{name: 'locations', complete: true},
 	{name: 'notifications'},
 	{name: 'projects'},
+	{name: 'projectMaps'},
 	{name: 'rawUnits'},
 	{name: 'reports.buyers.visitCounts', complete: true},
 	{name: 'requests'},
@@ -185,7 +187,7 @@ async function run({date, seconds} = {}) {
 		// units
 		const unitIds = Object.keys(unitIdsObj);
 		(await settlin.sellerUnits.find({'unit.id': {$in: unitIds}}).toArray()).forEach(su => bulk.sellerUnits.insert(su));
-		(await settlin.sellerUnitList.find({'unit.id': {$in: unitIds}}).toArray()).forEach(su => bulk.sellerUnitList.insert(su));
+		(await settlin.sellerUnitList.find({'unit._id': {$in: unitIds}}).toArray()).forEach(su => bulk.sellerUnitList.insert(su));
 		(await settlin.units.find({_id: {$in: unitIds}}).toArray()).forEach(u => {
 			bulk.units.insert(u);
 			if ((u.saleInfo.group || {}).id) groupIdsObj[u.saleInfo.group.id] = true;
@@ -221,12 +223,8 @@ async function run({date, seconds} = {}) {
 
 		// users
 		const indIds = Object.keys(indIdsObj);
-		(await settlin.users.find({
-			$or: [
-				{internal: true},
-				{_id: {$in: indIds}},
-			],
-		}).toArray()).forEach(i => bulk.users.insert(i));
+		await settlin.users.find({internal: true}).toArray().forEach(i => bulk.users.insert(i));
+		await settlin.users.find({_id: {$in: indIds}}).toArray().forEach(i => bulk.users.find({_id: i._id}).upsert().replaceOne(i));
 		Logger.debug('Users:', time());
 
 		const projectIds = Object.keys(projectIdsObj);
